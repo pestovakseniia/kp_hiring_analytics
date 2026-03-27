@@ -44,3 +44,5 @@ seeds:
         target_data_type: varchar(50)
         target_order_num: integer
       delimiter: ","
+      database: dbt_project
+      schema: reference
