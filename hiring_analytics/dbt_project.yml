@@ -34,15 +34,15 @@ models:
     +materialized: view
 
 seeds:
-  - name: stg_column_mapping
-    config:
-      quote_columns: false
-      column_types: 
+  hiring_analytics:
+    stg_column_mapping:
+      +quote_columns: false
+      +column_types: 
         raw_table_name: varchar(50)
         raw_column_name: varchar(50)
         target_column_name: varchar(50)
         target_data_type: varchar(50)
         target_order_num: integer
-      delimiter: ","
-      database: dbt_project
-      schema: reference
+      +delimiter: ","
+      +database: dbt_project
+      +schema: reference
