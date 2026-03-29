@@ -31,7 +31,8 @@ clean-targets:         # directories to be removed by `dbt clean`
 # files using the `{{ config(...) }}` macro.
 models:
   hiring_analytics:
-    +materialized: view
+    staging:
+      +materialized: view
 
 seeds:
   hiring_analytics:
