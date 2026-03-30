@@ -17,8 +17,8 @@ renamed as (
         cast(employment_status as varchar(50)) as employment_status,
         cast(org_category as varchar(50)) as org_category,
         cast(org_category_type as varchar(50)) as org_category_type,
-        convert_timezone('America/Los_Angeles', 'UTC', to_timestamp(work_start_micros)) as work_start_date,
-        convert_timezone('America/Los_Angeles', 'UTC', to_timestamp(work_end_micros)) as work_end_date,
+        to_date(work_start_micros) as work_start_date,
+        to_date(work_end_micros) as work_end_date,
         case
             when is_active = 'true' then TRUE
             else FALSE
