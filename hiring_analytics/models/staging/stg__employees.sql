@@ -6,7 +6,7 @@ with source as (
 
 ),
 
-with renamed as (
+renamed as (
 
     select
         cast(_offset as bigint) as offset,

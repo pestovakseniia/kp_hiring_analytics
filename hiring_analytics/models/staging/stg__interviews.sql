@@ -41,7 +41,7 @@ renamed as (
         cast(run_type as varchar(50)) as run_type,
         cast(type as varchar(50)) as type,
         cast(media_status as varchar(50)) as media_status,
-        ycast(invite_answer_status as varchar(50)) as invite_answer_status,
+        cast(invite_answer_status as varchar(50)) as invite_answer_status,
         convert_timezone('America/Los_Angeles', 'UTC', to_timestamp(_created_micros)) as created_at,
         convert_timezone('America/Los_Angeles', 'UTC', to_timestamp(_updated_micros)) as updated_at
     from source
