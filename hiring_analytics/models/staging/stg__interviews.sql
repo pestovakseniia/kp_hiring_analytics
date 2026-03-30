@@ -2,7 +2,7 @@
     config(
         alias='stg_interview', 
         materialized='incremental',
-        unique_key='offset',
+        unique_key='id',
         incremental_strategy = 'merge'
     ) 
 }}
