@@ -57,7 +57,7 @@ sources_united as (
     union
     select work_end_micros from source_employees
     union
-    select _created_micros as date from source_employees
+    select _created_micros from source_employees
     union
     select _updated_micros from source_employees
     union
@@ -88,7 +88,7 @@ enriched as (
         dayname(date) as day_name,
         monthname(date) as month_name,
         case
-            when day_of_week between 1-5 then FALSE
+            when day_of_week between 1 and 5 then FALSE
             else TRUE
         end as is_weekend,
         case 
@@ -102,6 +102,7 @@ enriched as (
             when month = 9 and day_of_week = 2 and day <= 7 then TRUE --Labor Day
             when month = 10 and day_of_week = 2 and day between 8 and 14 then TRUE --Columbus Day
             when month = 11 and day_of_week = 5 and day between 22 and 28 then TRUE --Thanksgiving
+            else FALSE
         end as is_holiday
     from sources_united
 
@@ -111,14 +112,14 @@ typecasted as (
 
     select
         date,
-        cast(year) as integer,
-        cast(quarter) as integer,
-        cast(month) as integer,
-        cast(day) as integer,
-        cast(week) as integer,
-        cast(day_of_week) as integer,
-        cast(day_name) as varchar(10),
-        cast(month_name) as varchar(10),
+        cast(year as integer) as year,
+        cast(quarter as integer) as quarter,
+        cast(month as integer) as month,
+        cast(day as integer) as day,
+        cast(week as integer) as week,
+        cast(day_of_week as integer) as day_of_week,
+        cast(day_name as varchar(10)) as day_name,
+        cast(month_name as varchar(10)) as month_name,
         is_weekend,
         is_holiday
     from enriched
