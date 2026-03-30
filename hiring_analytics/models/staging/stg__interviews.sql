@@ -10,7 +10,7 @@
 with source as (
 
     select * 
-    from {{ source('raw', 'interviews') }}
+    from {{ source('snowflake_sources', 'interviews') }}
 
     {% if is_incremental() %}
         where convert_timezone('America/Los_Angeles', 'UTC', to_timestamp(_updated_micros)) > (

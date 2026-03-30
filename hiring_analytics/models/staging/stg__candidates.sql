@@ -2,7 +2,7 @@
 
 with source as (
 
-    select * from {{ source('raw', 'candidates') }}
+    select * from {{ source('snowflake_sources', 'candidates') }}
     
 ),
 
