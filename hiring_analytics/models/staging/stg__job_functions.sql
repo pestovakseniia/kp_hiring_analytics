@@ -1,4 +1,4 @@
-{{ config(alias='stg_job_function') }}
+{{ config(alias='stg_job_function', materialized='view') }}
 
 with source as (
 
@@ -29,13 +29,9 @@ renamed as (
 
 deduplicated as (
 
-    select *        
-    from (
-        select *, 
-            row_number() over (partition by id order by updated_at desc) as rn
-        from renamed
-    ) _
-    where _.rn = 1
+    select *
+    from renamed
+    qualify row_number() over (partition by id order by updated_at desc) = 1
 
 ),
 

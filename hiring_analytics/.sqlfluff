@@ -1,0 +1,11 @@
+[sqlfluff]
+dialect = snowflake
+templater = dbt
+
+# Optional but recommended
+max_line_length = 120
+exclude_rules = L009,L031
+
+[sqlfluff:templater:dbt]
+project_dir = .
+profiles_dir = ~/.dbt

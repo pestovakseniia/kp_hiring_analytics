@@ -1,8 +1,22 @@
-{{ config(alias='stg_interview') }}
+{{ 
+    config(
+        alias='stg_interview', 
+        materialized='incremental',
+        unique_key='_offset',
+        incremental_strategy = 'merge'
+    ) 
+}}
 
 with source as (
 
-    select * from {{ source('raw', 'interviews') }}
+    select * 
+    from {{ source('raw', 'interviews') }}
+
+    {% if is_incremental() %}
+        where convert_timezone('America/Los_Angeles', 'UTC', to_timestamp(_updated_micros)) > (
+            select max(updated_at) from {{ this }}
+        )
+    {% endif %}
     
 ),
 
@@ -36,13 +50,9 @@ renamed as (
 
 deduplicated as (
 
-    select *        
-    from (
-        select *, 
-            row_number() over (partition by id order by updated_at desc) as rn
-        from renamed
-    ) _
-    where _.rn = 1
+    select *
+    from renamed
+    qualify row_number() over (partition by offset order by updated_at desc) = 1
 
 ),
 

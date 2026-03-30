@@ -1,8 +1,14 @@
 repos:
   - repo: local
     hooks:
-      - id: sqlfmt
-        name: Format SQL with sqlfmt
-        entry: sqlfmt -w
+      - id: sqlfluff-lint
+        name: sqlfluff lint
+        entry: sqlfluff lint
+        language: system
+        files: \.sql$
+
+      - id: sqlfluff-fix
+        name: sqlfluff fix
+        entry: sqlfluff fix
         language: system
         files: \.sql$
