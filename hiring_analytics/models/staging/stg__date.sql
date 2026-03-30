@@ -2,83 +2,83 @@
 
 with source_candidates as (
 
-    select 
-        _created_micros, 
-        _updated_micros 
+    select
+        _created_micros,
+        _updated_micros
     from {{ source('snowflake_sources', 'candidates') }}
-    
+
 ),
 
 source_employees as (
 
-    select 
-        work_start_micros, 
+    select
+        work_start_micros,
         work_end_micros,
-        _created_micros, 
-        _updated_micros 
+        _created_micros,
+        _updated_micros
     from {{ source('snowflake_sources', 'employees') }}
-    
+
 ),
 
 source_job_functions as (
 
-    select 
-        _created_micros, 
-        _updated_micros 
+    select
+        _created_micros,
+        _updated_micros
     from {{ source('snowflake_sources', 'job_functions') }}
-    
+
 ),
 
 source_skills as (
 
-    select 
-        _created_micros, 
-        _updated_micros 
+    select
+        _created_micros,
+        _updated_micros
     from {{ source('snowflake_sources', 'skills') }}
-    
+
 ),
 
 source_interviews as (
 
-    select 
-        _created_micros, 
-        _updated_micros 
+    select
+        _created_micros,
+        _updated_micros
     from {{ source('snowflake_sources', 'interviews') }}
-    
+
 ),
 
 sources_united as (
 
-    select _created_micros as date from source_candidates
+    select to_date(_created_micros) as date from source_candidates
     union
-    select _updated_micros from source_candidates
+    select to_date(_updated_micros) from source_candidates
     union
-    select work_start_micros from source_employees
+    select to_date(work_start_micros) from source_employees
     union
-    select work_end_micros from source_employees
+    select to_date(work_end_micros) from source_employees
     union
-    select _created_micros from source_employees
+    select to_date(_created_micros) from source_employees
     union
-    select _updated_micros from source_employees
+    select to_date(_updated_micros) from source_employees
     union
-    select _created_micros from source_job_functions
+    select to_date(_created_micros) from source_job_functions
     union
-    select _updated_micros from source_job_functions
+    select to_date(_updated_micros) from source_job_functions
     union
-    select _created_micros from source_skills
+    select to_date(_created_micros) from source_skills
     union
-    select _updated_micros from source_skills
+    select to_date(_updated_micros) from source_skills
     union
-    select _created_micros from source_interviews
+    select to_date(_created_micros) from source_interviews
     union
-    select _updated_micros from source_interviews
+    select to_date(_updated_micros) from source_interviews
 
 ),
 
 enriched as (
 
-    select 
-        to_date(date) as date,
+    select
+        date,
         year(date) as year,
         quarter(date) as quarter,
         month(date) as month,
@@ -87,21 +87,18 @@ enriched as (
         dayofweek(date) as day_of_week,
         dayname(date) as day_name,
         monthname(date) as month_name,
+        not coalesce (day_of_week between 1 and 5, false) as is_weekend,
         case
-            when day_of_week between 1 and 5 then FALSE
-            else TRUE
-        end as is_weekend,
-        case 
             when month = 1 and day = 1 then TRUE --New Year’s Day
             when month = 7 and day = 4 then TRUE --Independence Day
             when month = 11 and day = 11 then TRUE --Veterans Day
             when month = 12 and day = 25 then TRUE --Christmas Day
-            when month = 1 and day_of_week = 2 and day between 15 and 21 then TRUE --MLK
-            when month = 2 and day_of_week = 2 and day between 15 and 21 then TRUE --Presidents’ Day
-            when month = 5 and day_of_week = 2 and day + 7 > 31 then TRUE --Memorial Day
-            when month = 9 and day_of_week = 2 and day <= 7 then TRUE --Labor Day
-            when month = 10 and day_of_week = 2 and day between 8 and 14 then TRUE --Columbus Day
-            when month = 11 and day_of_week = 5 and day between 22 and 28 then TRUE --Thanksgiving
+            when month = 1 and day_of_week = 1 and day between 15 and 21 then TRUE --MLK
+            when month = 2 and day_of_week = 1 and day between 15 and 21 then TRUE --Presidents’ Day
+            when month = 5 and day_of_week = 1 and day + 7 > 31 then TRUE --Memorial Day
+            when month = 9 and day_of_week = 1 and day <= 7 then TRUE --Labor Day
+            when month = 10 and day_of_week = 1 and day between 8 and 14 then TRUE --Columbus Day
+            when month = 11 and day_of_week = 4 and day between 22 and 28 then TRUE --Thanksgiving
             else FALSE
         end as is_holiday
     from sources_united
