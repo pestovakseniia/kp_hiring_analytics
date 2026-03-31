@@ -36,7 +36,7 @@ models:
 
 seeds:
   hiring_analytics:
-    stg_column_mapping:
+    stg__column_mapping:
       +quote_columns: false
       +column_types: 
         raw_table_name: varchar(50)
@@ -47,3 +47,12 @@ seeds:
       +delimiter: ","
       +database: dbt_project
       +schema: reference
+
+snapshots:
+  hiring_analytics:
+    interviews_snapshots:
+      +schema: snapshots
+      +unique_key: id
+      +strategy: timestamp
+      +updated_at: _updated_micros
+      +hard_deletes: 'new_record'
