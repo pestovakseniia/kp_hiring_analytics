@@ -52,7 +52,7 @@ snapshots:
   hiring_analytics:
     interviews_snapshots:
       +schema: snapshots
-      +unique_key: id
+      +unique_key: _offset
       +strategy: timestamp
       +updated_at: _updated_micros
       +hard_deletes: 'new_record'
