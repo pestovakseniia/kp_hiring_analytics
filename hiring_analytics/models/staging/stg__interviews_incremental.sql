@@ -1,6 +1,6 @@
 {{ 
     config(
-        alias='stg_interview', 
+        alias='stg_interview_incremental', 
         materialized='incremental',
         unique_key='id',
         incremental_strategy = 'merge'
