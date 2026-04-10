@@ -33,13 +33,7 @@
     ),
 
     valid_to_from_added as (
-        select *,
-            updated_date as valid_from,
-            case 
-                when lead(updated_date) over (partition by {{ unique_key }} order by updated_date) is NULL then '9999-12-31 12:59:59.999'
-                else lead(updated_date) over (partition by {{ unique_key }} order by updated_date)
-            end as valid_to
-        from renamed_and_type_casted
+        {{ add_valid_from_and_to('renamed_and_type_casted', unique_key) }}
     ),
 
     valid_flag_added as (

@@ -33,6 +33,9 @@ models:
   hiring_analytics:
     staging:
       +materialized: view
+    marts:
+      +schema: gold
+      +materialized: table
 
 seeds:
   hiring_analytics:
