@@ -21,8 +21,8 @@ renamed as (
         cast(track as varchar(1)) as track,
         cast(seniority_level as varchar(2)) as seniority_level,
         cast(seniority_index as integer) as seniority_index,
-        convert_timezone('America/Los_Angeles', 'UTC', to_timestamp(_created_micros)) as created_at,
-        convert_timezone('America/Los_Angeles', 'UTC', to_timestamp(_updated_micros)) as updated_at
+        to_timestamp(_created_micros) as created_at,
+        to_timestamp(_updated_micros) as updated_at
     from source
 
 ),

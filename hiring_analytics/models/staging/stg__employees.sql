@@ -23,8 +23,8 @@ renamed as (
             when is_active = 'true' then TRUE
             else FALSE
         end as is_active,
-        convert_timezone('America/Los_Angeles', 'UTC', to_timestamp(_created_micros)) as created_at,
-        convert_timezone('America/Los_Angeles', 'UTC', to_timestamp(_updated_micros)) as updated_at
+        to_timestamp(_created_micros) as created_at,
+        to_timestamp(_updated_micros) as updated_at
     from source
 
 ),

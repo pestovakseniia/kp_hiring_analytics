@@ -28,8 +28,8 @@ renamed as (
         cast(name as varchar(200)) as name,
         cast(url as varchar(500)) as url,
         cast(parent_id as varchar(50)) as parent_id,
-        convert_timezone('America/Los_Angeles', 'UTC', to_timestamp(_created_micros)) as created_at,
-        convert_timezone('America/Los_Angeles', 'UTC', to_timestamp(_updated_micros)) as updated_at
+        to_timestamp(_created_micros) as created_at,
+        to_timestamp(_updated_micros) as updated_at
     from source
 
 ),

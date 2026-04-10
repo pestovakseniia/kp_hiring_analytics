@@ -15,8 +15,8 @@ renamed as (
         cast(staffing_status as varchar(50)) as staffing_status,
         cast(english_level as varchar(50)) as english_level,
         cast(job_function_id as varchar(50)) as job_function_id,
-        convert_timezone('America/Los_Angeles', 'UTC', to_timestamp(_created_micros)) as created_at,
-        convert_timezone('America/Los_Angeles', 'UTC', to_timestamp(_updated_micros)) as updated_at
+        to_timestamp(_created_micros) as created_at,
+        to_timestamp(_updated_micros) as updated_at
     from source
 
 ),
