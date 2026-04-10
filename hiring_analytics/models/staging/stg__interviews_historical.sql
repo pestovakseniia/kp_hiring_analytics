@@ -1,6 +1,6 @@
 {{ 
     config(
-        alias='stg_interview_historical', 
+        alias='stg_interview_historical' 
     ) 
 }}
 

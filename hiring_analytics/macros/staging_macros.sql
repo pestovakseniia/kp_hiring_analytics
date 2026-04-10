@@ -57,6 +57,20 @@
 
 {% endmacro %}
 
--- {% macro latest_staging_model() %}
-    
--- {% endmacro %}
+{% macro latest_staging_model(staging_model_name) %}
+    with source as (
+        select * from {{ ref(staging_model_name) }}
+    ),
+
+    filtered as (
+        select * 
+        from source
+        where row_is_active = 1
+    ),
+
+    final as (
+        select * from filtered
+    )
+
+    select * from final
+{% endmacro %}
