@@ -32,6 +32,7 @@ clean-targets:         # directories to be removed by `dbt clean`
 models:
   hiring_analytics:
     staging:
+      +schema: bronze
       +materialized: view
     marts:
       +schema: gold
@@ -49,12 +50,12 @@ seeds:
         target_order_num: integer
       +delimiter: ","
       +database: dbt_project
-      +schema: reference
+      +schema: bronze_reference
 
 snapshots:
   hiring_analytics:
     interviews_snapshots:
-      +schema: snapshots
+      +schema: bronze_snapshots
       +unique_key: _offset
       +strategy: timestamp
       +updated_at: _updated_micros
