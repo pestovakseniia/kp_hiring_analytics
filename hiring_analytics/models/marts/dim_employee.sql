@@ -22,8 +22,8 @@ necessary_columns_only as (
         work_start_date,
         work_end_date,
         is_active,
-        valid_from as valid_from_datetime,
-        valid_to as valid_to_datetime
+        valid_from,
+        valid_to
     from valid_to_from_added
 
 ),

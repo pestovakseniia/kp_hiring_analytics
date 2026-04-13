@@ -6,16 +6,13 @@ with source_interviews as (
 
 source_candidates as (
 
-    select 
-        offset,
-        id 
-    from {{ ref('stg__candidates') }}
+    select * from {{ ref('dim_candidate') }}
 
 ),
 
 source_employees as (
 
-    select * from {{ ref('stg__employees') }}
+    select * from {{ ref('dim_employee') }}
 
 ),
 
@@ -23,15 +20,19 @@ interviews_joined_candidates as (
 
     select i.*, c.offset as candidate_offset 
     from source_interviews as i
-    left join source_candidates as c on i.candidate_id = c.id
+    left join source_candidates as c 
+        on i.candidate_id = c.id and
+        i.created_at between c.valid_from and c.valid_to
 
 ),
 
-interviews_joined_cemployees as (
+interviews_joined_employees as (
 
     select i.*, e.offset as interviewer_offset 
     from interviews_joined_candidates as i
-    left join source_employees as e on i.interviewer_id = e.id
+    left join source_employees as e 
+        on i.interviewer_id = e.id and
+        i.created_at between e.valid_from and e.valid_to
 
 ),
 
@@ -52,8 +53,9 @@ normalized as (
         invite_answer_status,
         to_date(created_at) as created_date,
         created_at as created_datetime,
-        valid_from
-    from interviews_joined_cemployees
+        valid_from,
+        row_is_active
+    from interviews_joined_employees
 
 ),
 
@@ -79,9 +81,17 @@ durations_added as (
 
 ),
 
+only_active_records_taken as (
+
+    select * 
+    from durations_added
+    where row_is_active = 1
+
+),
+
 final as (
 
-    select * exclude valid_from from durations_added
+    select * exclude (valid_from, row_is_active) from only_active_records_taken
 
 )
 
