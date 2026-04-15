@@ -14,24 +14,81 @@ sources:
 
     tables:
       - name: candidates
-        description: Cadnidates list, staffing status, and their English level      
+        description: Cadnidates list, staffing status, and their English level 
+        columns:
+          - name: candidate_id
+            data_tests:
+              - not_null  
+          - name: english_level
+            data_tests:
+              - accepted_values:
+                  values: ['A0','A1','A1+','A2','A2+','B1','B1+','B2','B2+','C1','C1+','C2','Native','Unspecified']   
+          - name: job_function_id
+            data_tests:
+              - relationships:
+                  arguments:
+                    to: source('snowflake_sources', 'job_functions')
+                    field: job_function_id
         config:
           freshness:
             warn_after: {count: 7, period: day} 
             error_after: {count: 30, period: day}
           loaded_at_query: |
             select convert_timezone('America/Los_Angeles', 'UTC', to_timestamp(max(_updated_micros))) from {{ this }}
+      
       - name: employees
         description: Employees list, employment status, their skills, and job function
+        columns:
+          - name: employee_id
+            data_tests:
+              - not_null
+          - name: job_function_id
+            data_tests:
+              - not_null
+              - relationships:
+                  arguments:
+                    to: source('snowflake_sources', 'job_functions')
+                    field: job_function_id
+      
       - name: interviews
         description: List of interviews by candidates, interview status, and interviewers
+        columns:
+          - name: id
+            data_tests:
+              - not_null
+          - name: run_type
+            data_tests:
+              - accepted_values:
+                  values: ['OFFLINE','ONLINE']
+          - name: type
+            data_tests:
+              - accepted_values:
+                  values: ['Project','Technical']
         config:
           freshness:
             warn_after: {count: 365, period: day} 
             error_after: {count: 700, period: day}
           loaded_at_query: |
             select convert_timezone('America/Los_Angeles', 'UTC', to_timestamp(max(_updated_micros))) from {{ this }}
+      
       - name: job_functions
         description: List of all the job functions
+        columns:
+          - name: job_function_id
+            data_tests:
+              - unique
+              - not_null
+          - name: track
+            data_tests:
+              - accepted_values:
+                  values: ['A','B','C','O']
+      
       - name: skills
         description: List of all the skills
+        columns:
+          - name: _offset
+            data_tests:
+              - unique
+          - name: id
+            data_tests:
+              - not_null
