@@ -102,6 +102,7 @@ enriched as (
             else FALSE
         end as is_holiday
     from sources_united
+    where date is not null
 
 ),
 

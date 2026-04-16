@@ -17,34 +17,34 @@ sources:
         description: Cadnidates list, staffing status, and their English level 
         columns:
           - name: _offset
-            data_tests:
+            tests:
               - unique
               - not_null
           - name: candidate_id
-            data_tests:
+            tests:
               - not_null  
           - name: primary_skill_id
-            data_tests:
+            tests:
               - not_null
               - relationships:
                   arguments:
                     to: source('snowflake_sources', 'skills')
                     field: id
           - name: english_level
-            data_tests:
+            tests:
               - accepted_values:
                   values: ['A0','A1','A1+','A2','A2+','B1','B1+','B2','B2+','C1','C1+','C2','Native','Unspecified']   
           - name: job_function_id
-            data_tests:
+            tests:
               - relationships:
                   arguments:
                     to: source('snowflake_sources', 'job_functions')
                     field: job_function_id
           - name: _created_micros
-            data_tests:
+            tests:
               - not_null
           - name: _updated_micros
-            data_tests:
+            tests:
               - not_null
         config:
           freshness:
@@ -57,71 +57,71 @@ sources:
         description: Employees list, employment status, their skills, and job function
         columns:
           - name: _offset
-            data_tests:
+            tests:
               - unique
               - not_null
           - name: employee_id
-            data_tests:
+            tests:
               - not_null
           - name: job_function_id
-            data_tests:
+            tests:
               - not_null
               - relationships:
                   arguments:
                     to: source('snowflake_sources', 'job_functions')
                     field: job_function_id
           - name: primary_skill_id
-            data_tests:
+            tests:
               - not_null
               - relationships:
                   arguments:
                     to: source('snowflake_sources', 'skills')
                     field: id
           - name: work_start_micros
-            data_tests:
+            tests:
               - not_null
           - name: _created_micros
-            data_tests:
+            tests:
               - not_null
           - name: _updated_micros
-            data_tests:
+            tests:
               - not_null
       
       - name: interviews
         description: List of interviews by candidates, interview status, and interviewers
         columns:
           - name: _offset
-            data_tests:
+            tests:
               - unique
               - not_null
           - name: id
-            data_tests:
+            tests:
               - not_null
           - name: candidate_id
-            data_tests:
+            tests:
               - relationships:
                   arguments:
                     to: source('snowflake_sources', 'candidates')
                     field: candidate_id
           - name: interviewer_id
-            data_tests:
+            tests:
               - relationships:
                   arguments:
                     to: source('snowflake_sources', 'employees')
                     field: employee_id
           - name: run_type
-            data_tests:
+            tests:
               - accepted_values:
                   values: ['OFFLINE','ONLINE']
           - name: type
-            data_tests:
+            tests:
               - accepted_values:
                   values: ['Project','Technical']
           - name: _created_micros
-            data_tests:
+            tests:
               - not_null
           - name: _updated_micros
-            data_tests:
+            tests:
               - not_null
         config:
           freshness:
@@ -134,11 +134,11 @@ sources:
         description: List of all the job functions
         columns:
           - name: _offset
-            data_tests:
+            tests:
               - unique
               - not_null
           - name: job_function_id
-            data_tests:
+            tests:
               - unique
               - not_null
           - name: experience_years
@@ -147,28 +147,28 @@ sources:
                   min_value: 0
                   max_value: 8
           - name: track
-            data_tests:
+            tests:
               - accepted_values:
                   values: ['A','B','C','O']
           - name: _created_micros
-            data_tests:
+            tests:
               - not_null
           - name: _updated_micros
-            data_tests:
+            tests:
               - not_null
       
       - name: skills
         description: List of all the skills
         columns:
           - name: _offset
-            data_tests:
+            tests:
               - unique
               - not_null
           - name: id
-            data_tests:
+            tests:
               - not_null
           - name: parent_id
-            data_tests:
+            tests:
               - relationships:
                   arguments:
                     to: source('snowflake_sources', 'skills')
@@ -177,8 +177,8 @@ sources:
             tests:
               - dbt_utils.not_empty_string
           - name: _created_micros
-            data_tests:
+            tests:
               - not_null
           - name: _updated_micros
-            data_tests:
+            tests:
               - not_null
