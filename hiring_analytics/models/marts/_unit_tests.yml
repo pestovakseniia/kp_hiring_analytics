@@ -1,0 +1,21 @@
+unit_tests:
+  - name: test_macros_valid_from_and_to
+    description: "Check macros work on example of dim_candidates model."
+    model: dim_candidate
+    given:
+      - input: ref('stg__candidates')
+        format: dict
+        rows:
+          - {id: 1, updated_at: '2024-01-01 00:00:00'}
+          - {id: 1, updated_at: '2024-01-02 00:00:00'}
+          - {id: 1, updated_at: '2024-01-03 00:00:00'}
+          - {id: 2, updated_at: '2024-02-01 00:00:00'}
+          - {id: 2, updated_at: '2024-02-02 00:00:00'}
+    expect:
+      format: dict
+      rows:
+        - {id: 1, valid_from: '2024-01-01 00:00:00', valid_to: '2024-01-02 00:00:00'}
+        - {id: 1, valid_from: '2024-01-02 00:00:00', valid_to: '2024-01-03 00:00:00'}
+        - {id: 1, valid_from: '2024-01-03 00:00:00', valid_to: '9999-12-31 12:59:59.999'}
+        - {id: 2, valid_from: '2024-02-01 00:00:00', valid_to: '2024-02-02 00:00:00'}
+        - {id: 2, valid_from: '2024-02-02 00:00:00', valid_to: '9999-12-31 12:59:59.999'}
