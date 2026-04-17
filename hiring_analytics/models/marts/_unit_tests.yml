@@ -19,3 +19,138 @@ unit_tests:
         - {id: 1, valid_from: '2024-01-03 00:00:00', valid_to: '9999-12-31 12:59:59.999'}
         - {id: 2, valid_from: '2024-02-01 00:00:00', valid_to: '2024-02-02 00:00:00'}
         - {id: 2, valid_from: '2024-02-02 00:00:00', valid_to: '9999-12-31 12:59:59.999'}
+
+  - name: test_status_normalization
+    description: "Validate status normalization removes leading/trailing junk and uppercases values"
+    model: fct_interview 
+
+    given:
+      - input: ref('stg__interviews_historical')
+        format: dict
+        rows:
+          - {id: 1, candidate_id: 10, interviewer_id: 100, status: '__completed__', created_at: '2024-01-01 10:00:00', valid_from: '2024-01-01 10:00:00', row_is_active: 1}
+          - {id: 2, candidate_id: 20, interviewer_id: 200, status: '!!!CANCELLED', created_at: '2024-01-02 10:00:00', valid_from: '2024-01-02 10:00:00', row_is_active: 1}
+          - {id: 3, candidate_id: 30, interviewer_id: 300, status: 'pending_feedback***', created_at: '2024-01-03 10:00:00', valid_from: '2024-01-03 10:00:00', row_is_active: 1}
+          - {id: 4, candidate_id: 40, interviewer_id: 400, status: '___In_Progress___', created_at: '2024-01-04 10:00:00', valid_from: '2024-01-04 10:00:00', row_is_active: 1}
+
+      - input: ref('dim_candidate')
+        format: dict
+        rows:
+          - {id: 10, offset: 1000, valid_from: '2023-01-01 00:00:00', valid_to: '9999-12-31 00:00:00'}
+          - {id: 20, offset: 2000, valid_from: '2023-01-01 00:00:00', valid_to: '9999-12-31 00:00:00'}
+          - {id: 30, offset: 3000, valid_from: '2023-01-01 00:00:00', valid_to: '9999-12-31 00:00:00'}
+          - {id: 40, offset: 4000, valid_from: '2023-01-01 00:00:00', valid_to: '9999-12-31 00:00:00'}
+
+      - input: ref('dim_employee')
+        format: dict
+        rows:
+          - {id: 100, offset: 5000, valid_from: '2023-01-01 00:00:00', valid_to: '9999-12-31 00:00:00'}
+          - {id: 200, offset: 6000, valid_from: '2023-01-01 00:00:00', valid_to: '9999-12-31 00:00:00'}
+          - {id: 300, offset: 7000, valid_from: '2023-01-01 00:00:00', valid_to: '9999-12-31 00:00:00'}
+          - {id: 400, offset: 8000, valid_from: '2023-01-01 00:00:00', valid_to: '9999-12-31 00:00:00'}
+
+    expect:
+      format: dict
+      rows:
+        - {id: 1, status: 'COMPLETED'}
+        - {id: 2, status: 'CANCELLED'}
+        - {id: 3, status: 'PENDING_FEEDBACK'}
+        - {id: 4, status: 'IN_PROGRESS'}
+
+  - name: test_status_datetimes_derivation
+    description: "Validate datetime derivation for each status using window functions"
+    model: fct_interview   
+
+    given:
+      - input: ref('stg__interviews_historical')
+        format: dict
+        rows:
+          - {id: 1, candidate_id: 10, interviewer_id: 100, status: 'REQUESTED',        created_at: '2024-01-01 09:00:00', valid_from: '2024-01-01 09:00:00', row_is_active: 0}
+          - {id: 1, candidate_id: 10, interviewer_id: 100, status: 'SCHEDULED',        created_at: '2024-01-01 10:00:00', valid_from: '2024-01-01 10:00:00', row_is_active: 0}
+          - {id: 1, candidate_id: 10, interviewer_id: 100, status: 'IN_PROGRESS',      created_at: '2024-01-01 11:00:00', valid_from: '2024-01-01 11:00:00', row_is_active: 0}
+          - {id: 1, candidate_id: 10, interviewer_id: 100, status: 'COMPLETED',        created_at: '2024-01-01 12:00:00', valid_from: '2024-01-01 12:00:00', row_is_active: 0}
+          - {id: 1, candidate_id: 10, interviewer_id: 100, status: 'PENDING_FEEDBACK', created_at: '2024-01-01 13:00:00', valid_from: '2024-01-01 13:00:00', row_is_active: 1}
+          - {id: 2, candidate_id: 20, interviewer_id: 200, status: 'REQUESTED',  created_at: '2024-02-01 09:00:00', valid_from: '2024-02-01 09:00:00', row_is_active: 0}
+          - {id: 2, candidate_id: 20, interviewer_id: 200, status: 'CANCELLED',  created_at: '2024-02-01 10:00:00', valid_from: '2024-02-01 10:00:00', row_is_active: 1}
+
+      - input: ref('dim_candidate')
+        format: dict
+        rows:
+          - {id: 10, offset: 1000, valid_from: '2023-01-01', valid_to: '9999-12-31'}
+          - {id: 20, offset: 2000, valid_from: '2023-01-01', valid_to: '9999-12-31'}
+
+      - input: ref('dim_employee')
+        format: dict
+        rows:
+          - {id: 100, offset: 5000, valid_from: '2023-01-01', valid_to: '9999-12-31'}
+          - {id: 200, offset: 6000, valid_from: '2023-01-01', valid_to: '9999-12-31'}
+
+    expect:
+      format: dict
+      rows:
+        - {
+            id: 1,
+            requested_datetime: '2024-01-01 09:00:00',
+            scheduled_datetime: '2024-01-01 10:00:00',
+            started_datetime: '2024-01-01 11:00:00',
+            finished_datetime: '2024-01-01 12:00:00',
+            feedback_provided_datetime: '2024-01-01 13:00:00',
+            cancelled_datetime: null
+          }
+        - {
+            id: 2,
+            requested_datetime: '2024-02-01 09:00:00',
+            scheduled_datetime: null,
+            started_datetime: null,
+            finished_datetime: null,
+            feedback_provided_datetime: null,
+            cancelled_datetime: '2024-02-01 10:00:00'
+          }
+
+  - name: test_interview_durations
+    description: "Validate interview_duration_hours and feedback_delay_days calculations"
+    model: fct_interview   
+
+    given:
+      - input: ref('stg__interviews_historical')
+        format: dict
+        rows:
+          - {id: 1, candidate_id: 10, interviewer_id: 100, status: 'IN_PROGRESS',      created_at: '2024-01-01 10:00:00', valid_from: '2024-01-01 10:00:00', row_is_active: 0}
+          - {id: 1, candidate_id: 10, interviewer_id: 100, status: 'PENDING_FEEDBACK', created_at: '2024-01-01 15:00:00', valid_from: '2024-01-01 15:00:00', row_is_active: 0}
+          - {id: 1, candidate_id: 10, interviewer_id: 100, status: 'COMPLETED',        created_at: '2024-01-03 15:00:00', valid_from: '2024-01-03 15:00:00', row_is_active: 1}
+          - {id: 2, candidate_id: 20, interviewer_id: 200, status: 'IN_PROGRESS', created_at: '2024-02-01 10:00:00', valid_from: '2024-02-01 10:00:00', row_is_active: 1}
+          - {id: 3, candidate_id: 30, interviewer_id: 300, status: 'IN_PROGRESS',      created_at: '2024-03-01 10:00:00', valid_from: '2024-03-01 10:00:00', row_is_active: 0}
+          - {id: 3, candidate_id: 30, interviewer_id: 300, status: 'PENDING_FEEDBACK', created_at: '2024-03-01 12:00:00', valid_from: '2024-03-01 12:00:00', row_is_active: 1}
+
+      - input: ref('dim_candidate')
+        format: dict
+        rows:
+          - {id: 10, offset: 1000, valid_from: '2023-01-01', valid_to: '9999-12-31'}
+          - {id: 20, offset: 2000, valid_from: '2023-01-01', valid_to: '9999-12-31'}
+          - {id: 30, offset: 3000, valid_from: '2023-01-01', valid_to: '9999-12-31'}
+
+      - input: ref('dim_employee')
+        format: dict
+        rows:
+          - {id: 100, offset: 5000, valid_from: '2023-01-01', valid_to: '9999-12-31'}
+          - {id: 200, offset: 6000, valid_from: '2023-01-01', valid_to: '9999-12-31'}
+          - {id: 300, offset: 7000, valid_from: '2023-01-01', valid_to: '9999-12-31'}
+
+    expect:
+      format: dict
+      rows:
+        - {
+            id: 1,
+            interview_duration_hours: 5,
+            feedback_delay_days: 2
+          }
+        - {
+            id: 2,
+            interview_duration_hours: null,
+            feedback_delay_days: null
+          }
+        - {
+            id: 3,
+            interview_duration_hours: 2,
+            feedback_delay_days: null
+          }
