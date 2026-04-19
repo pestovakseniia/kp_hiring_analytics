@@ -1,0 +1,20 @@
+version: 2
+
+models:
+  - name: dim_candidate
+    description: "{{ doc('dim_shared_description') }} Contains candidate-related attributes."
+
+  - name: dim_employee
+    description: "{{ doc('dim_shared_description') }} Contains employee-related attributes such as recruiters and interviewers."
+
+  - name: dim_job_function
+    description: "{{ doc('dim_shared_description') }} Contains job function classifications for roles."
+
+  - name: dim_primary_skill
+    description: "{{ doc('dim_shared_description') }} Contains primary skill classification for candidates or roles."
+
+  - name: dim_date
+    description: "{{ doc('dim_date_description') }}"
+
+  - name: fct_interview
+    description: "{{ doc('fct_interview_description') }}"

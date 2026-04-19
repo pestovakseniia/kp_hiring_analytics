@@ -2,6 +2,7 @@ version: 2
 
 models:
   - name: stg__date
+    description: "Date dimension staging model providing calendar attributes (e.g., day, month, year) for time-based analysis."
 
     columns:
 

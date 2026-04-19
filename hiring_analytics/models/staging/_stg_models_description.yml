@@ -1,0 +1,23 @@
+version: 2
+
+models:
+  - name: stg__candidates
+    description: "Staging model containing standardized candidate data with cleaned attributes and consistent naming conventions."
+
+  - name: stg__employees
+    description: "Staging model containing employee data (e.g., recruiters, interviewers) with standardized fields for reporting and joins."
+
+  - name: stg__interviews_historical
+    description: "Historical staging model for interview events, preserving all status changes over time for each interview record."
+
+  - name: stg__interviews_incremental
+    description: "Incremental staging model processing newly ingested interview data, used to efficiently update downstream models."
+
+  - name: stg__interviews_latest
+    description: "Staging model representing the latest state of each interview, derived from historical records."
+
+  - name: stg__job_functions
+    description: "Reference staging model containing job function classifications used to categorize roles in the hiring process."
+
+  - name: stg__skills
+    description: "Staging model containing standardized skill definitions associated with candidates or job requirements."

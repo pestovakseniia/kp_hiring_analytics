@@ -31,16 +31,21 @@ clean-targets:         # directories to be removed by `dbt clean`
 # files using the `{{ config(...) }}` macro.
 models:
   hiring_analytics:
+    +description: "Core transformation models for the hiring analytics project."
+    
     staging:
+      +description: "Staging layer containing standardized source data."
       +schema: bronze
       +materialized: view
     marts:
+      +description: "Business-ready marts layer containing fact and dimension tables for reporting."
       +schema: gold
       +materialized: table
 
 seeds:
   hiring_analytics:
     stg__column_mapping:
+      +description: "Reference mapping file used to standardize raw source column names and data types."
       +quote_columns: false
       +column_types: 
         raw_table_name: varchar(50)
@@ -55,6 +60,7 @@ seeds:
 snapshots:
   hiring_analytics:
     interviews_snapshots:
+      +description: "Snapshot table preserving historical changes for interview records based on update timestamp."
       +schema: bronze_snapshots
       +unique_key: _offset
       +strategy: timestamp
