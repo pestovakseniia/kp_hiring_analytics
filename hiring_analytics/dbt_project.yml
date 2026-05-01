@@ -49,7 +49,7 @@ seeds:
       +column_types: 
         raw_table_name: varchar(50)
         raw_column_name: varchar(50)
-        target_column_name: varchar(50)v
+        target_column_name: varchar(50)
         target_data_type: varchar(50)
         target_order_num: integer
       +delimiter: ","
