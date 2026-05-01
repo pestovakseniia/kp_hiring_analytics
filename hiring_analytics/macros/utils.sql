@@ -9,3 +9,11 @@
     from {{ source_cte }}
 
 {% endmacro %}
+
+{% macro generate_custom_schema(custom_schema_name) %}
+    {% if target.name == 'prod' %}
+        {{ custom_schema_name }}
+    {% else %}
+        {{ target.schema ~ '_' ~ custom_schema_name }}
+    {% endif %}
+{% endmacro %}
