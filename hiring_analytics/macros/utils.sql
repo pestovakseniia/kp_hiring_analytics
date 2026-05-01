@@ -11,7 +11,7 @@
 {% endmacro %}
 
 {% macro generate_custom_schema(custom_schema_name) %}
-    {% if target.name == 'prod' %}
+    {% if target.name != 'dev' %}
         {{ custom_schema_name }}
     {% else %}
         {{ target.schema ~ '_' ~ custom_schema_name }}
