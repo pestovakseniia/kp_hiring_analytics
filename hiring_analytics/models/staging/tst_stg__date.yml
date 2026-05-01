@@ -15,53 +15,61 @@ models:
         tests:
           - not_null
           - dbt_expectations.expect_column_values_to_be_between:
-              min_value: 2000
-              max_value: 2100
+              arguments:
+                min_value: 2000
+                max_value: 2100
 
       - name: month
         tests:
           - not_null
           - dbt_expectations.expect_column_values_to_be_between:
-              min_value: 1
-              max_value: 12
+              arguments:
+                min_value: 1
+                max_value: 12
 
       - name: day
         tests:
           - not_null
           - dbt_expectations.expect_column_values_to_be_between:
-              min_value: 1
-              max_value: 31
+              arguments:
+                min_value: 1
+                max_value: 31
 
       - name: quarter
         tests:
           - dbt_expectations.expect_column_values_to_be_between:
-              min_value: 1
-              max_value: 4
+              arguments:
+                min_value: 1
+                max_value: 4
 
       - name: week
         tests:
           - dbt_expectations.expect_column_values_to_be_between:
-              min_value: 1
-              max_value: 53
+              arguments:
+                min_value: 1
+                max_value: 53
 
       - name: day_of_week
         tests:
           - not_null
           - dbt_expectations.expect_column_values_to_be_between:
-              min_value: 0
-              max_value: 6
+              arguments:
+                min_value: 0
+                max_value: 6
 
       - name: day_name
         tests:
           - not_null
           - dbt_expectations.expect_column_values_to_be_in_set:
-              value_set: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun']
+              arguments:
+                value_set: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun']
 
       - name: month_name
         tests:
           - not_null
           - dbt_expectations.expect_column_values_to_be_in_set:
-              value_set: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+              arguments:
+                value_set: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 
       - name: is_weekend
         tests:

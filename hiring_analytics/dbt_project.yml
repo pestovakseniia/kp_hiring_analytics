@@ -45,12 +45,11 @@ models:
 seeds:
   hiring_analytics:
     stg__column_mapping:
-      +description: "Reference mapping file used to standardize raw source column names and data types."
       +quote_columns: false
       +column_types: 
         raw_table_name: varchar(50)
         raw_column_name: varchar(50)
-        target_column_name: varchar(50)
+        target_column_name: varchar(50)v
         target_data_type: varchar(50)
         target_order_num: integer
       +delimiter: ","
@@ -60,7 +59,6 @@ seeds:
 snapshots:
   hiring_analytics:
     interviews_snapshots:
-      +description: "Snapshot table preserving historical changes for interview records based on update timestamp."
       +schema: bronze_snapshots
       +unique_key: _offset
       +strategy: timestamp
