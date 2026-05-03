@@ -16,3 +16,7 @@ logs/
 .DS_Store
 Thumbs.db
 .env
+
+# failed tests
+tests/tst_stg__skills__url.sql
+tests/tst_stg__employees__is_active.sql
