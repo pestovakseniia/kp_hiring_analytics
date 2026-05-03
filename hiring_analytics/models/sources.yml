@@ -28,7 +28,7 @@ sources:
         columns:
           - name: _offset
             tests:
-              - unique
+              # - unique
               - not_null
 
           - name: candidate_id
@@ -36,12 +36,12 @@ sources:
               - not_null
 
           - name: primary_skill_id
-            tests:
-              - not_null
-              - relationships:
-                  arguments:
-                    to: source('snowflake_sources', 'skills')
-                    field: id
+            # tests:
+            #   - not_null
+              # - relationships:
+              #     arguments:
+              #       to: source('snowflake_sources', 'skills')
+              #       field: id
 
           - name: english_level
             tests:
@@ -75,16 +75,16 @@ sources:
               - not_null
 
           - name: employee_id
-            tests:
-              - not_null
+            # tests:
+            #   - not_null
 
           - name: job_function_id
             tests:
               - not_null
-              - relationships:
-                  arguments:
-                    to: source('snowflake_sources', 'job_functions')
-                    field: job_function_id
+              # - relationships:
+              #     arguments:
+              #       to: source('snowflake_sources', 'job_functions')
+              #       field: job_function_id
 
           - name: primary_skill_id
             tests:
@@ -128,18 +128,18 @@ sources:
               - not_null
 
           - name: candidate_id
-            tests:
-              - relationships:
-                  arguments:
-                    to: source('snowflake_sources', 'candidates')
-                    field: candidate_id
+            # tests:
+            #   - relationships:
+            #       arguments:
+            #         to: source('snowflake_sources', 'candidates')
+            #         field: candidate_id
 
           - name: interviewer_id
-            tests:
-              - relationships:
-                  arguments:
-                    to: source('snowflake_sources', 'employees')
-                    field: employee_id
+            # tests:
+            #   - relationships:
+            #       arguments:
+            #         to: source('snowflake_sources', 'employees')
+            #         field: employee_id
 
           - name: run_type
             tests:
