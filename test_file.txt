@@ -1,4 +1,5 @@
 some changes made;
 more changes made;
 even more changes made;
-line 4
+line 4;
+5
