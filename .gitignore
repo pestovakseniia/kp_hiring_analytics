@@ -19,4 +19,8 @@ Thumbs.db
 
 # failed tests
 tests/tst_stg__skills__url.sql
+<<<<<<< HEAD
 tests/tst_stg__employees__is_active.sql
+=======
+tests/tst_stg__employees__is_active.sql
+>>>>>>> cb53627306d48ba2a72f2921f8aadce073ccf902
