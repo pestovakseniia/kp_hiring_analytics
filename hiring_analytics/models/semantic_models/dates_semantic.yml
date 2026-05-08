@@ -1,0 +1,61 @@
+semantic_models:
+  - name: dates
+    description: >
+      Calendar date dimension used for time-based reporting,
+      aggregations, and business calendar analysis.
+
+    model: ref('dim_date')
+
+    entities:
+      - name: date
+        type: primary
+
+    dimensions:
+      # time dimensions
+      - name: date
+        type: time
+        type_params:
+          time_granularity: day
+
+      # categorical dims
+      - name: year
+        type: categorical
+
+      - name: quarter
+        type: categorical
+
+      - name: month
+        type: categorical
+
+      - name: week
+        type: categorical
+
+      - name: day
+        type: categorical
+
+      - name: day_of_week
+        type: categorical
+
+      - name: day_name
+        type: categorical
+
+      - name: month_name
+        type: categorical
+
+      # boolean dimensions
+      - name: is_weekend
+        type: categorical
+
+      - name: is_holiday
+        type: categorical
+
+    measures:
+      - name: holiday_count
+        description: Number of holidays
+        agg: sum
+        expr: case when is_holiday = true then 1 else 0 end
+
+      - name: weekend_day_count
+        description: Number of weekend days
+        agg: sum
+        expr: case when is_weekend = true then 1 else 0 end

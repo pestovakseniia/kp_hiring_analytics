@@ -1,0 +1,56 @@
+semantic_models:
+  - name: job_functions
+    description: >
+      Reference dimension containing organizational job functions,
+      role hierarchy, and seniority metadata.
+
+    model: ref('dim_job_function')
+
+    entities:
+      - name: job_function
+        expr: id
+        type: primary
+
+    dimensions:
+      - name: base_name
+        description: Base name of the job function
+        type: categorical
+
+      - name: category
+        description: Organizational category of the role
+        type: categorical
+
+      - name: track
+        description: Career track associated with the role
+        type: categorical
+
+      - name: level
+        description: Job level label
+        type: categorical
+
+      - name: seniority_level
+        description: Human-readable seniority classification
+        type: categorical
+
+      - name: seniority_index
+        description: Numeric seniority ranking
+        type: categorical
+
+      - name: is_active
+        description: Indicates whether the job function is active
+        type: categorical
+
+    measures:
+      - name: job_function_count
+        description: Total number of job functions
+        agg: count
+
+      - name: active_job_function_count
+        description: Number of active job functions
+        agg: sum
+        expr: case when is_active = true then 1 else 0 end
+
+      - name: inactive_job_function_count
+        description: Number of inactive job functions
+        agg: sum
+        expr: case when is_active = false then 1 else 0 end

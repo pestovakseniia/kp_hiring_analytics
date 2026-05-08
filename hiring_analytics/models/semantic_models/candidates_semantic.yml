@@ -1,0 +1,51 @@
+semantic_models:
+  - name: candidates
+    description: >
+      Slowly changing dimension containing candidate attributes,
+      staffing information, and skill metadata.
+
+    model: ref('dim_candidate')
+
+    entities:
+      - name: candidate
+        expr: id
+        type: primary
+
+      - name: primary_skill
+        expr: primary_skill_id
+        type: foreign
+
+      - name: job_function
+        expr: job_function_id
+        type: foreign
+
+    dimensions:
+      # time dims
+      - name: valid_from
+        type: time
+        type_params:
+          time_granularity: second
+
+      - name: valid_to
+        type: time
+        type_params:
+          time_granularity: second
+
+      # categorical
+      - name: staffing_status
+        description: Current staffing status of the candidate
+        type: categorical
+
+      - name: english_level
+        description: Candidate English proficiency level
+        type: categorical
+
+    measures:
+      - name: candidate_count
+        description: Total number of candidate dimension records
+        agg: count
+
+      - name: distinct_candidate_count
+        description: Distinct count of candidates
+        agg: count_distinct
+        expr: id

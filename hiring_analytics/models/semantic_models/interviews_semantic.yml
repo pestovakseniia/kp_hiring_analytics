@@ -1,0 +1,138 @@
+semantic_models:
+  - name: interviews
+    description: >
+      Business-ready semantic model representing interview lifecycle events
+      and operational interview KPIs.
+
+    model: ref('fct_interview')
+
+    entities:
+      - name: interview
+        expr: id
+        type: primary
+
+      - name: candidate
+        expr: offset
+        type: foreign
+
+      - name: interviewer
+        expr: interviewer_offset
+        type: foreign
+
+      - name: date
+        expr: created_date
+        type: foreign
+
+    dimensions:
+    # time dims
+      - name: created_date
+        type: time
+        type_params:
+          time_granularity: day
+
+      - name: created_datetime
+        type: time
+        type_params:
+          time_granularity: second
+
+      - name: requested_datetime
+        type: time
+        type_params:
+          time_granularity: second
+
+      - name: scheduled_datetime
+        type: time
+        type_params:
+          time_granularity: second
+
+      - name: started_datetime
+        type: time
+        type_params:
+          time_granularity: second
+
+      - name: finished_datetime
+        type: time
+        type_params:
+          time_granularity: second
+
+      - name: feedback_provided_datetime
+        type: time
+        type_params:
+          time_granularity: second
+
+      - name: cancelled_datetime
+        type: time
+        type_params:
+          time_granularity: second
+
+      # categorical dims
+      - name: candidate_type
+        type: categorical
+
+      - name: status
+        type: categorical
+
+      - name: location
+        type: categorical
+
+      - name: run_type
+        type: categorical
+
+      - name: type
+        type: categorical
+
+      - name: media_status
+        type: categorical
+
+      - name: invite_answer_status
+        type: categorical
+
+      # boolean dims
+      - name: is_logged
+        type: categorical
+
+      - name: is_media_available
+        type: categorical
+
+    measures:
+      # core counts
+      - name: interview_count
+        description: Total number of interviews
+        agg: count
+
+      - name: completed_interview_count
+        description: Number of completed interviews
+        agg: sum
+        expr: case when status = 'COMPLETED' then 1 else 0 end
+
+      - name: cancelled_interview_count
+        description: Number of cancelled interviews
+        agg: sum
+        expr: case when status = 'CANCELLED' then 1 else 0 end
+
+      # duration KPIs
+      - name: total_interview_duration_hours
+        description: Total interview duration in hours
+        agg: sum
+        expr: interview_duration_hours
+
+      - name: avg_interview_duration_hours
+        description: Average interview duration in hours
+        agg: average
+        expr: interview_duration_hours
+
+      - name: avg_feedback_delay_days
+        description: Average delay between feedback and completion
+        agg: average
+        expr: feedback_delay_days
+
+      # operational metrics
+      - name: logged_interview_count
+        description: Number of logged interviews
+        agg: sum
+        expr: case when is_logged then 1 else 0 end
+
+      - name: media_available_count
+        description: Number of interviews with media available
+        agg: sum
+        expr: case when is_media_available then 1 else 0 end

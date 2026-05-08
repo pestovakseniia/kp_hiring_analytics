@@ -1,0 +1,71 @@
+semantic_models:
+  - name: employees
+    description: >
+      Dimension containing employee organizational,
+      staffing, and skill-related attributes.
+
+    model: ref('dim_employee')
+
+    entities:
+      - name: employee
+        expr: id
+        type: primary
+
+      - name: primary_skill
+        expr: primary_skill_id
+        type: foreign
+
+      - name: job_function
+        expr: job_function_id
+        type: foreign
+
+    dimensions:
+      - name: valid_from
+        type: time
+        type_params:
+          time_granularity: second
+
+      - name: valid_to
+        type: time
+        type_params:
+          time_granularity: second
+
+      - name: work_start_date
+        type: time
+        type_params:
+          time_granularity: day
+
+      - name: work_end_date
+        type: time
+        type_params:
+          time_granularity: day
+
+      - name: production_category
+        type: categorical
+
+      - name: employment_status
+        type: categorical
+
+      - name: org_category
+        type: categorical
+
+      - name: org_category_type
+        type: categorical
+
+      - name: is_active
+        type: categorical
+
+    measures:
+      - name: employee_record_count
+        description: Total number of employee dimension records
+        agg: count
+
+      - name: active_employee_count
+        description: Number of active employees
+        agg: sum
+        expr: case when is_active = true then 1 else 0 end
+
+      - name: inactive_employee_count
+        description: Number of inactive employees
+        agg: sum
+        expr: case when is_active = false then 1 else 0 end
