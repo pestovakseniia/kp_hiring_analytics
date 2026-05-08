@@ -1,0 +1,37 @@
+metrics:
+  # Core volume metric
+  - name: total_interviews
+    description: Total number of interviews conducted
+    type: simple
+    type_params:
+      measure: interview_count
+    label: Total Interviews
+
+    # Interview success rate
+  - name: interview_completion_rate
+    description: Share of interviews that were completed
+    type: ratio
+
+    type_params:
+      numerator:
+        name: completed_interview_count
+      denominator:
+        name: interview_count
+
+    label: Interview Completion Rate2
+
+    # Interview efficiency 
+  - name: avg_interview_duration_hours
+    description: Average duration of interviews in hours
+    type: simple
+    type_params:
+      measure: avg_interview_duration_hours
+    label: Avg Interview Duration (Hours)
+
+    # Active workforce metric
+  - name: active_employees
+    description: Number of currently active employees
+    type: simple
+    type_params:
+      measure: active_employee_count
+    label: Active Employees
