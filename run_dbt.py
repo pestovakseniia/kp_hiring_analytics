@@ -11,6 +11,6 @@ load_dotenv(os.path.join(base_dir, ".env"))
 # Always point to dbt project
 project_dir = os.path.join(base_dir, "hiring_analytics")
 
-cmd = ["dbt"] + sys.argv[1:] + ["--project-dir", project_dir]
+cmd = ["dbt"] + sys.argv[1:] + ["--project-dir", project_dir]\
 
 subprocess.run(cmd)
