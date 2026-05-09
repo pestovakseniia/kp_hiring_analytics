@@ -11,26 +11,31 @@ semantic_models:
         type: primary
 
     dimensions:
-      # time dimensions
-      - name: date
+      - name: date_value
+        expr: date
         type: time
         type_params:
           time_granularity: day
 
       # categorical dims
-      - name: year
+      - name: year_of_date
+        expr: year
         type: categorical
 
-      - name: quarter
+      - name: quarter_of_date
+        expr: quarter
         type: categorical
 
-      - name: month
+      - name: month_of_date
+        expr: month
         type: categorical
 
-      - name: week
+      - name: week_of_date
+        expr: week
         type: categorical
 
-      - name: day
+      - name: day_of_date
+        expr: day
         type: categorical
 
       - name: day_of_week
@@ -54,8 +59,10 @@ semantic_models:
         description: Number of holidays
         agg: sum
         expr: case when is_holiday = true then 1 else 0 end
+        agg_time_dimension: date_value
 
       - name: weekend_day_count
         description: Number of weekend days
         agg: sum
         expr: case when is_weekend = true then 1 else 0 end
+        agg_time_dimension: date_value

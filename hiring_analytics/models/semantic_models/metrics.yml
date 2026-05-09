@@ -1,4 +1,18 @@
 metrics:
+  - name: interview_count
+    label: Interview Count
+    description: Total number of interviews
+    type: simple
+    type_params:
+      measure: interview_count
+
+  - name: completed_interview_count
+    label: Completed Interview Count
+    description: Number of completed interviews
+    type: simple
+    type_params:
+      measure: completed_interview_count
+
   # Core volume metric
   - name: total_interviews
     description: Total number of interviews conducted

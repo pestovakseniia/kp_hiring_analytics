@@ -1,22 +1,12 @@
 saved_queries:
-  - name: interview_performance_by_skill_and_seniority
+  - name: interview_operational_summary
     description: >
-      Provides insights into interview volume, completion rate, and efficiency
-      broken down by primary skill and job function seniority level.
+      Executive-level summary of interview operations,
+      including interview volume, completion rate,
+      and operational efficiency.
 
     query_params:
-
       metrics:
         - total_interviews
         - interview_completion_rate
         - avg_interview_duration_hours
-
-      group_by:
-        - primary_skills.name
-        - job_functions.seniority_level
-
-      time_dimension:
-        - interviews.created_date
-
-      order_by:
-        - total_interviews desc

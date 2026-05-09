@@ -19,17 +19,12 @@ semantic_models:
         expr: interviewer_offset
         type: foreign
 
-      - name: date
+      - name: interview_created_date
         expr: created_date
         type: foreign
 
     dimensions:
     # time dims
-      - name: created_date
-        type: time
-        type_params:
-          time_granularity: day
-
       - name: created_datetime
         type: time
         type_params:
@@ -99,40 +94,49 @@ semantic_models:
       - name: interview_count
         description: Total number of interviews
         agg: count
+        expr: 1
+        agg_time_dimension: created_datetime
 
       - name: completed_interview_count
         description: Number of completed interviews
         agg: sum
         expr: case when status = 'COMPLETED' then 1 else 0 end
+        agg_time_dimension: created_datetime
 
       - name: cancelled_interview_count
         description: Number of cancelled interviews
         agg: sum
         expr: case when status = 'CANCELLED' then 1 else 0 end
+        agg_time_dimension: created_datetime
 
       # duration KPIs
       - name: total_interview_duration_hours
         description: Total interview duration in hours
         agg: sum
         expr: interview_duration_hours
+        agg_time_dimension: created_datetime
 
       - name: avg_interview_duration_hours
         description: Average interview duration in hours
         agg: average
         expr: interview_duration_hours
+        agg_time_dimension: created_datetime
 
       - name: avg_feedback_delay_days
         description: Average delay between feedback and completion
         agg: average
         expr: feedback_delay_days
+        agg_time_dimension: created_datetime
 
       # operational metrics
       - name: logged_interview_count
         description: Number of logged interviews
         agg: sum
         expr: case when is_logged then 1 else 0 end
+        agg_time_dimension: created_datetime
 
       - name: media_available_count
         description: Number of interviews with media available
         agg: sum
         expr: case when is_media_available then 1 else 0 end
+        agg_time_dimension: created_datetime

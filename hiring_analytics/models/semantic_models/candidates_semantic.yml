@@ -44,8 +44,11 @@ semantic_models:
       - name: candidate_count
         description: Total number of candidate dimension records
         agg: count
+        expr: 1
+        agg_time_dimension: valid_from
 
       - name: distinct_candidate_count
         description: Distinct count of candidates
         agg: count_distinct
         expr: id
+        agg_time_dimension: valid_from

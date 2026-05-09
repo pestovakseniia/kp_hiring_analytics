@@ -59,13 +59,17 @@ semantic_models:
       - name: employee_record_count
         description: Total number of employee dimension records
         agg: count
+        expr: 1
+        agg_time_dimension: valid_from
 
       - name: active_employee_count
         description: Number of active employees
         agg: sum
         expr: case when is_active = true then 1 else 0 end
+        agg_time_dimension: valid_from
 
       - name: inactive_employee_count
         description: Number of inactive employees
         agg: sum
         expr: case when is_active = false then 1 else 0 end
+        agg_time_dimension: valid_from
